@@ -15,8 +15,8 @@ BuildRequires: libxml2-devel
 BuildRequires: libboolstuff-devel >= 0.1.12
 BuildRequires: gettext
 BuildRequires: pkgconfig
-BuildRequires: %{_bindir}/makeinfo
-BuildRequires: %{_bindir}/man2html
+BuildRequires: texinfo
+BuildRequires: man
 
 Requires(post):  /sbin/chkconfig
 Requires(preun): /sbin/chkconfig
