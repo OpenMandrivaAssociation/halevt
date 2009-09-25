@@ -1,29 +1,20 @@
 Name:    halevt
 Summary: Generic handler for HAL events
-Version: 0.1.4
+Version: 0.1.5
 Release: %mkrel 1
 License: GPLv2+
 Group:   System/Configuration/Hardware
-
-URL:       http://www.environnement.ens.fr/perso/dumas/halevt.html
-Source0:   http://www.environnement.ens.fr/perso/dumas/halevt-%{version}.tar.gz
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+URL:     http://www.nongnu.org/halevt/
+Source0: http://savannah.nongnu.org/download/halevt/%{name}-%{version}.tar.gz
+BuildRoot: %{_tmppath}/%{name}-%{version}
 
 BuildRequires: dbus-glib-devel
 BuildRequires: hal-devel
 BuildRequires: libxml2-devel
 BuildRequires: libboolstuff-devel >= 0.1.12
 BuildRequires: gettext
-BuildRequires: pkgconfig
 BuildRequires: texinfo
 BuildRequires: man
-
-Requires(post):  /sbin/chkconfig
-Requires(preun): /sbin/chkconfig
-Requires(preun): /sbin/service
-Requires(post):  info
-Requires(preun): info
-Requires(pre):   shadow-utils
 
 %description
 Halevt (HAL events manager) is a daemon that executes arbitrary commands
@@ -38,53 +29,45 @@ devices and keep a list of devices handled by halevt-mount.
 %prep
 %setup -q
 
-
 %build
-%configure
-make %{?_smp_mflags}
-
+%configure2_5x
+%make
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT INSTALL='install -p'
+rm -rf %{buildroot}
+%makeinstall_std
 
-rm -f $RPM_BUILD_ROOT%{_infodir}/dir
+rm -f %{buildroot}%{_infodir}/dir
 
-mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d
+mkdir -p %{buildroot}%{_sysconfdir}/rc.d/init.d
 
-install -m 0755 -p halevt-initscript $RPM_BUILD_ROOT%{_sysconfdir}/rc.d/init.d/halevt
+install -m 0755 -p halevt-initscript %{buildroot}%{_sysconfdir}/rc.d/init.d/halevt
 
 %find_lang %{name}
 %find_lang %{name}-mount
 cat %{name}-mount.lang >> %{name}.lang
 
 %clean
-rm -rf $RPM_BUILD_ROOT
-
+rm -rf %{buildroot}
 
 %pre
-getent group halevt >/dev/null || groupadd -r halevt
-getent passwd halevt >/dev/null || \
-useradd -r -g halevt -d %{_localstatedir}/lib/halevt -s /sbin/nologin \
-    -c "Halevt system user" halevt
-exit 0
+%_pre_useradd %{name} %{_localstatedir}/lib/halevt /sbin/nologin
 
 %post
-# This adds the proper /etc/rc*.d links for the script
-/sbin/chkconfig --add halevt
-/sbin/install-info %{_infodir}/%{name}.info %{_infodir}/dir || :
+%_post_service %{name}
+%__install_info %{name}.info
 
 %preun
-if [ $1 = 0 ]; then
-        /sbin/service halevt stop >/dev/null 2>&1 || :
-        /sbin/chkconfig --del halevt
+%_preun_service service_name
+%__install_info %{name}.info
 
-        /sbin/install-info --delete %{_infodir}/%{name}.info %{_infodir}/dir || :
-fi
+%postun
+%_postun_userdel %{name}
+%_postun_groupdel %{name}
 
 %files -f %{name}.lang
 %defattr(-,root,root,-)
-%doc COPYING AUTHORS README NEWS halevt-hvmount.xml
+%doc  AUTHORS README NEWS examples
 %doc doc/*.html
 %dir %{_sysconfdir}/halevt
 %{_sysconfdir}/rc.d/init.d/halevt
@@ -93,11 +76,11 @@ fi
 %{_bindir}/halevt-umount
 %{_bindir}/hvmount
 %{_bindir}/hvumount
+%{_bindir}/halevt_umount_from_tray-gtkdialog.sh
+%{_bindir}/halevt_umount_from_tray-xmessage.sh
+%{_bindir}/halevt_umount_report.sh
 %{_infodir}/halevt.info*
-%dir %{_datadir}/halevt
-%{_datadir}/halevt/halevt.xml
 %{_mandir}/man1/halevt*.1*
 %{_mandir}/man1/hvm*.1*
 %dir %attr(750,halevt,halevt) %{_localstatedir}/run/halevt
 %dir %attr(755,halevt,halevt) %{_localstatedir}/lib/halevt
-
