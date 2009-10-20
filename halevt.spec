@@ -70,7 +70,7 @@ rm -rf %{buildroot}
 %_install_info %{name}.info
 
 %preun
-%_preun_service service_name
+%_preun_service %{name}
 %_remove_install_info %{name}.info
 
 %postun
