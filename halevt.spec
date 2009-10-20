@@ -30,6 +30,22 @@ the mounting of media as they are inserted/attached to the system.
 Halevt comes with halevt-mount a program able to use HAL to mount, umount
 devices and keep a list of devices handled by halevt-mount.
 
+%package system
+Summary: Run halevt system-wide
+Group: System/Configuration/Hardware
+Requires: %{name}
+
+%description system
+This package will make halevt run system-wide.
+
+%package user
+Summary: Run halevt as user
+Group: System/Configuration/Hardware
+Requires: %{name}
+
+%description user
+This package will make halevt run as user.
+
 %prep
 %setup -q
 
@@ -66,25 +82,26 @@ rm -rf %{buildroot}
 %_pre_useradd %{name} %{_localstatedir}/lib/halevt /sbin/nologin
 
 %post
-%_post_service %{name}
 %_install_info %{name}.info
 
 %preun
-%_preun_service %{name}
 %_remove_install_info %{name}.info
 
 %postun
 %_postun_userdel %{name}
 %_postun_groupdel %{name}
 
+%post system
+%_post_service %{name}
+
+%preun system
+%_preun_service service_name
+
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %doc  AUTHORS README NEWS examples
 %doc doc/*.html
 %dir %{_sysconfdir}/halevt
-%{_sysconfdir}/rc.d/init.d/halevt
 %{_sysconfdir}/%{name}/%{name}.xml
-%{_sysconfdir}/X11/xinit.d/%{name}
 %{_bindir}/halevt
 %{_bindir}/halevt-mount
 %{_bindir}/halevt-umount
@@ -99,3 +116,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/hvm*.1*
 %dir %attr(750,halevt,halevt) %{_localstatedir}/run/halevt
 %dir %attr(755,halevt,halevt) %{_localstatedir}/lib/halevt
+
+%files system
+%defattr(-,root,root,-)
+%{_sysconfdir}/rc.d/init.d/halevt
+
+%files user
+%defattr(-,root,root,-)
+%{_sysconfdir}/X11/xinit.d/%{name}
