@@ -7,6 +7,8 @@ Group:   System/Configuration/Hardware
 URL:     http://www.nongnu.org/halevt/
 Source0: http://savannah.nongnu.org/download/halevt/%{name}-%{version}.tar.gz
 Source1: %{name}.xml
+Source2: %{name}-explore-directory
+Source3: %{name}-explore-mount
 BuildRoot: %{_tmppath}/%{name}-%{version}
 
 BuildRequires: dbus-glib-devel
@@ -47,6 +49,8 @@ install -m 0755 -p halevt-initscript %{buildroot}%{_sysconfdir}/rc.d/init.d/hale
 install -d %{buildroot}%{_sysconfdir}/%{name}
 install -m644 %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/
 
+install -m755 %{SOURCE2} %{SOURCE3} %{buildroot}%{_bindir}/
+
 %find_lang %{name}
 %find_lang %{name}-mount
 cat %{name}-mount.lang >> %{name}.lang
@@ -79,6 +83,7 @@ rm -rf %{buildroot}
 %{_bindir}/halevt
 %{_bindir}/halevt-mount
 %{_bindir}/halevt-umount
+%{_bindir}/halevt-explore-*
 %{_bindir}/hvmount
 %{_bindir}/hvumount
 %{_bindir}/halevt_umount_from_tray-gtkdialog.sh
