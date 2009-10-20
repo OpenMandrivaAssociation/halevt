@@ -6,6 +6,7 @@ License: GPLv2+
 Group:   System/Configuration/Hardware
 URL:     http://www.nongnu.org/halevt/
 Source0: http://savannah.nongnu.org/download/halevt/%{name}-%{version}.tar.gz
+Source1: %{name}.xml
 BuildRoot: %{_tmppath}/%{name}-%{version}
 
 BuildRequires: dbus-glib-devel
@@ -43,6 +44,9 @@ mkdir -p %{buildroot}%{_sysconfdir}/rc.d/init.d
 
 install -m 0755 -p halevt-initscript %{buildroot}%{_sysconfdir}/rc.d/init.d/halevt
 
+install -d %{buildroot}%{_sysconfdir}/%{name}
+install -m644 %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/
+
 %find_lang %{name}
 %find_lang %{name}-mount
 cat %{name}-mount.lang >> %{name}.lang
@@ -71,6 +75,7 @@ rm -rf %{buildroot}
 %doc doc/*.html
 %dir %{_sysconfdir}/halevt
 %{_sysconfdir}/rc.d/init.d/halevt
+%{_sysconfdir}/%{name}/%{name}.xml
 %{_bindir}/halevt
 %{_bindir}/halevt-mount
 %{_bindir}/halevt-umount
