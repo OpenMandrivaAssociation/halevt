@@ -9,6 +9,7 @@ Source0: http://savannah.nongnu.org/download/halevt/%{name}-%{version}.tar.gz
 Source1: %{name}.xml
 Source2: %{name}-explore-directory
 Source3: %{name}-explore-mount
+Source4: %{name}.xinit
 BuildRoot: %{_tmppath}/%{name}-%{version}
 
 BuildRequires: dbus-glib-devel
@@ -51,6 +52,9 @@ install -m644 %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/
 
 install -m755 %{SOURCE2} %{SOURCE3} %{buildroot}%{_bindir}/
 
+install -d %{buildroot}%{_sysconfdir}/X11/xinit.d
+install -m755 %{SOURCE4} %{buildroot}%{_sysconfdir}/X11/xinit.d/%{name}
+
 %find_lang %{name}
 %find_lang %{name}-mount
 cat %{name}-mount.lang >> %{name}.lang
@@ -80,6 +84,7 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/halevt
 %{_sysconfdir}/rc.d/init.d/halevt
 %{_sysconfdir}/%{name}/%{name}.xml
+%{_sysconfdir}/X11/xinit.d/%{name}
 %{_bindir}/halevt
 %{_bindir}/halevt-mount
 %{_bindir}/halevt-umount
