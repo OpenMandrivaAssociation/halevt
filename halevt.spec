@@ -55,11 +55,11 @@ rm -rf %{buildroot}
 
 %post
 %_post_service %{name}
-%__install_info %{name}.info
+%_install_info %{name}.info
 
 %preun
 %_preun_service service_name
-%__install_info %{name}.info
+%_remove_install_info %{name}.info
 
 %postun
 %_postun_userdel %{name}
