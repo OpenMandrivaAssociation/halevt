@@ -1,7 +1,7 @@
 Name:    halevt
 Summary: Generic handler for HAL events
-Version: 0.1.5
-Release: %mkrel 6
+Version: 0.1.6.2
+Release: %mkrel 1
 License: GPLv2+
 Group:   System/Configuration/Hardware
 URL:     http://www.nongnu.org/halevt/
