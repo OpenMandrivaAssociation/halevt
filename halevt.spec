@@ -4,7 +4,7 @@ Version: 0.1.6.2
 Release: %mkrel 1
 License: GPLv2+
 Group:   System/Configuration/Hardware
-URL:     http://www.nongnu.org/halevt/
+URL:     https://www.nongnu.org/halevt/
 Source0: http://savannah.nongnu.org/download/halevt/%{name}-%{version}.tar.gz
 Source1: %{name}.xml
 Source2: %{name}-explore-directory
